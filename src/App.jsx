@@ -1,7 +1,13 @@
-
 import React, { useState } from 'react';
 import './App.css';
 import hymnIcon from './assets/hymn.gif';
+import attackIcon from './assets/attack.gif';
+import coldIcon from './assets/cold.gif';
+import diseaseIcon from './assets/disease.gif';
+import fireIcon from './assets/fire.gif';
+import magicIcon from './assets/magic.gif';
+import poisonIcon from './assets/poison.gif';
+import thornsIcon from './assets/thorns.gif';
 
 const GOALS = [
   { key: 'magicResist', label: 'Magic Resist' },
@@ -11,8 +17,14 @@ const GOALS = [
   { key: 'diseaseResist', label: 'Disease Resist' },
   { key: 'attack', label: 'Attack' },
   { key: 'damageShield', label: 'Damage Shield' },
-  { key: 'manaRegen', label: 'Mana Regen' },
   { key: 'healthRegen', label: 'Health Regen' }
+];
+
+const INFO_COLUMNS = [
+  ...GOALS,
+  { key: 'haste', label: 'Haste' },
+  { key: 'hasteV2', label: 'Haste v2' },
+  { key: 'hasteV3', label: 'Haste v3' }
 ];
 
 const SONGS = [
@@ -39,37 +51,37 @@ const SONGS = [
       "1: Effect type: Make Weapons Magical"
     ]
   },
-  {
-    name: "Anthem de Arms",
-    level: 10,
-    targetType: "Group",
-    skill: "Singing",
-    goals: ["attackSpeed", "str"],
-    effects: [
-      "1: Effect type: Increase Attack Speed by 10%",
-      "2: Effect type: Increase STR by 10 (L10) to 37 (L65)"
-    ]
-  },
-  {
-    name: "Cinda's Charismatic Carillon",
-    level: 11,
-    targetType: "Single target",
-    skill: "Wind_instruments",
-    goals: ["faction"],
-    effects: [
-      "1: Effect type: Increase Faction by 120 (L11) to 660 (L65)"
-    ]
-  },
-  {
-    name: "Brusco's Boastful Bellow",
-    level: 12,
-    targetType: "Single target",
-    skill: "Singing",
-    goals: ["damage"],
-    effects: [
-      "1: Effect type: Decrease Hitpoints by 7 (L12) to 34 (L65)"
-    ]
-  },
+  // {
+  //   name: "Anthem de Arms",
+  //   level: 10,
+  //   targetType: "Group",
+  //   skill: "Singing",
+  //   goals: ["attack", "str"],
+  //   effects: [
+  //     "1: Effect type: Increase Attack Speed by 10%",
+  //     "2: Effect type: Increase STR by 10 (L10) to 37 (L65)"
+  //   ]
+  // },
+  // {
+  //   name: "Cinda's Charismatic Carillon",
+  //   level: 11,
+  //   targetType: "Single target",
+  //   skill: "Wind_instruments",
+  //   goals: ["faction"],
+  //   effects: [
+  //     "1: Effect type: Increase Faction by 120 (L11) to 660 (L65)"
+  //   ]
+  // },
+  // {
+  //   name: "Brusco's Boastful Bellow",
+  //   level: 12,
+  //   targetType: "Single target",
+  //   skill: "Singing",
+  //   goals: ["damage"],
+  //   effects: [
+  //     "1: Effect type: Decrease Hitpoints by 7 (L12) to 34 (L65)"
+  //   ]
+  // },
   {
     name: "Purifying Rhythms",
     level: 13,
@@ -83,46 +95,46 @@ const SONGS = [
       "4: Effect type: Increase AC for Cloth Casters by 2 (L13) to 8 (L65), Everyone else by 2 (L13) to 5 (L65)"
     ]
   },
-  {
-    name: "Lyssa's Cataloging Libretto",
-    level: 14,
-    targetType: "Single target",
-    skill: "Singing",
-    goals: ["utility"],
-    effects: [
-      "1: Effect type: Identify"
-    ]
-  },
-  {
-    name: "Kelin's Lucid Lullaby",
-    level: 15,
-    targetType: "Single target",
-    skill: "Stringed_instruments",
-    goals: ["mez"],
-    effects: [
-      "1: Effect type: Mesmerize up to level 30"
-    ]
-  },
-  {
-    name: "Song of Sustenance",
-    level: 15,
-    targetType: "Group",
-    skill: "Stringed_instruments",
-    goals: ["utility"],
-    effects: [
-      "1: Effect type: Food/Water"
-    ]
-  },
-  {
-    name: "Tarew's Aquatic Ayre",
-    level: 16,
-    targetType: "Group",
-    skill: "Wind_instruments",
-    goals: ["utility"],
-    effects: [
-      "1: Effect type: WaterBreathing by 1"
-    ]
-  },
+  // {
+  //   name: "Lyssa's Cataloging Libretto",
+  //   level: 14,
+  //   targetType: "Single target",
+  //   skill: "Singing",
+  //   goals: ["utility"],
+  //   effects: [
+  //     "1: Effect type: Identify"
+  //   ]
+  // },
+  // {
+  //   name: "Kelin's Lucid Lullaby",
+  //   level: 15,
+  //   targetType: "Single target",
+  //   skill: "Stringed_instruments",
+  //   goals: ["mez"],
+  //   effects: [
+  //     "1: Effect type: Mesmerize up to level 30"
+  //   ]
+  // },
+  // {
+  //   name: "Song of Sustenance",
+  //   level: 15,
+  //   targetType: "Group",
+  //   skill: "Stringed_instruments",
+  //   goals: ["utility"],
+  //   effects: [
+  //     "1: Effect type: Food/Water"
+  //   ]
+  // },
+  // {
+  //   name: "Tarew's Aquatic Ayre",
+  //   level: 16,
+  //   targetType: "Group",
+  //   skill: "Wind_instruments",
+  //   goals: ["utility"],
+  //   effects: [
+  //     "1: Effect type: WaterBreathing by 1"
+  //   ]
+  // },
   {
     name: "Guardian Rhythms",
     level: 17,
@@ -145,17 +157,17 @@ const SONGS = [
       "2: Effect type: Decrease AC for Cloth Casters by 7 (L18) to 25 (L65), Everyone else by 4 (L18) to 18 (L65)"
     ]
   },
-  {
-    name: "Shauri's Sonorous Clouding",
-    level: 19,
-    targetType: "Group",
-    skill: "Wind_instruments",
-    goals: ["invis", "seeInvis"],
-    effects: [
-      "1: Effect type: Invisibility by 1",
-      "3: Effect type: See Invisible"
-    ]
-  },
+  // {
+  //   name: "Shauri's Sonorous Clouding",
+  //   level: 19,
+  //   targetType: "Group",
+  //   skill: "Wind_instruments",
+  //   goals: ["invis", "seeInvis"],
+  //   effects: [
+  //     "1: Effect type: Invisibility by 1",
+  //     "3: Effect type: See Invisible"
+  //   ]
+  // },
   {
     name: "Largo's Melodic Binding",
     level: 20,
@@ -177,26 +189,26 @@ const SONGS = [
       "2: Effect type: Increase Mana by 2"
     ]
   },
-  {
-    name: "Melanie's Mellifluous Motion",
-    level: 21,
-    targetType: "Group",
-    skill: "Wind_instruments",
-    goals: ["utility"],
-    effects: [
-      "1: Effect type: Shadowstep"
-    ]
-  },
-  {
-    name: "Alenia's Disenchanting Melody",
-    level: 22,
-    targetType: "Group",
-    skill: "Stringed_instruments",
-    goals: ["utility"],
-    effects: [
-      "1: Effect type: Cancel Magic (1)"
-    ]
-  },
+  // {
+  //   name: "Melanie's Mellifluous Motion",
+  //   level: 21,
+  //   targetType: "Group",
+  //   skill: "Wind_instruments",
+  //   goals: ["utility"],
+  //   effects: [
+  //     "1: Effect type: Shadowstep"
+  //   ]
+  // },
+  // {
+  //   name: "Alenia's Disenchanting Melody",
+  //   level: 22,
+  //   targetType: "Group",
+  //   skill: "Stringed_instruments",
+  //   goals: ["utility"],
+  //   effects: [
+  //     "1: Effect type: Cancel Magic (1)"
+  //   ]
+  // },
   {
     name: "Selo's Consonant Chain",
     level: 23,
@@ -208,17 +220,17 @@ const SONGS = [
       "3: Effect type: Decrease Attack Speed by 40%"
     ]
   },
-  {
-    name: "Lyssa's Veracious Concord",
-    level: 24,
-    targetType: "Group",
-    skill: "Wind_instruments",
-    goals: ["seeInvis", "ultravision"],
-    effects: [
-      "1: Effect type: See Invisible",
-      "2: Effect type: Ultravision"
-    ]
-  },
+  // {
+  //   name: "Lyssa's Veracious Concord",
+  //   level: 24,
+  //   targetType: "Group",
+  //   skill: "Wind_instruments",
+  //   goals: ["seeInvis", "ultravision"],
+  //   effects: [
+  //     "1: Effect type: See Invisible",
+  //     "2: Effect type: Ultravision"
+  //   ]
+  // },
   {
     name: "Psalm of Warmth",
     level: 25,
@@ -232,16 +244,16 @@ const SONGS = [
       "4: Effect type: Increase AC for Cloth Casters by 3 (L25) to 8 (L65), Everyone else by 2 (L25) to 5 (L65)"
     ]
   },
-  {
-    name: "Angstlich's Appalling Screech",
-    level: 26,
-    targetType: "Area of effect around the caster",
-    skill: "Brass_instruments",
-    goals: ["fear"],
-    effects: [
-      "1: Effect type: Fear up to level 52"
-    ]
-  },
+  // {
+  //   name: "Angstlich's Appalling Screech",
+  //   level: 26,
+  //   targetType: "Area of effect around the caster",
+  //   skill: "Brass_instruments",
+  //   goals: ["fear"],
+  //   effects: [
+  //     "1: Effect type: Fear up to level 52"
+  //   ]
+  // },
   {
     name: "Solon's Song of the Sirens",
     level: 27,
@@ -297,16 +309,16 @@ const SONGS = [
       "1: Effect type: Increase Singing Skill by 5 (L30) to 10 (L65)"
     ]
   },
-  {
-    name: "Agilmente's Aria of Eagles",
-    level: 31,
-    targetType: "Group",
-    skill: "Wind_instruments",
-    goals: ["levitate"],
-    effects: [
-      "1: Effect type: Levitate"
-    ]
-  },
+  // {
+  //   name: "Agilmente's Aria of Eagles",
+  //   level: 31,
+  //   targetType: "Group",
+  //   skill: "Wind_instruments",
+  //   goals: ["levitate"],
+  //   effects: [
+  //     "1: Effect type: Levitate"
+  //   ]
+  // },
   {
     name: "Cassindra's Chorus of Clarity",
     level: 32,
@@ -330,16 +342,16 @@ const SONGS = [
       "4: Effect type: Increase AC for Cloth Casters by 4 (L33) to 8 (L65), Everyone else by 3 (L33) to 5 (L65)"
     ]
   },
-  {
-    name: "Lyssa's Solidarity of Vision",
-    level: 34,
-    targetType: "Single target",
-    skill: "Wind_instruments",
-    goals: ["bindSight"],
-    effects: [
-      "1: Effect type: Bind Sight"
-    ]
-  },
+  // {
+  //   name: "Lyssa's Solidarity of Vision",
+  //   level: 34,
+  //   targetType: "Single target",
+  //   skill: "Wind_instruments",
+  //   goals: ["bindSight"],
+  //   effects: [
+  //     "1: Effect type: Bind Sight"
+  //   ]
+  // },
   {
     name: "Cantata of Soothing",
     level: 34,
@@ -362,18 +374,18 @@ const SONGS = [
       "1: Effect type: Decrease Mana by 23 (L35) to 38 (L65)"
     ]
   },
-  {
-    name: "Vilia's Verses of Celerity",
-    level: 36,
-    targetType: "Group",
-    skill: "Singing",
-    goals: ["attackSpeed", "agi", "ac"],
-    effects: [
-      "1: Effect type: Increase Attack Speed by 20%",
-      "2: Effect type: Increase AGI by 23 (L36) to 37 (L65)",
-      "3: Effect type: Increase AC for Cloth Casters by 7 (L36) to 12 (L65), Everyone else by 4 (L36) to 9 (L65)"
-    ]
-  },
+  // {
+  //   name: "Vilia's Verses of Celerity",
+  //   level: 36,
+  //   targetType: "Group",
+  //   skill: "Singing",
+  //   goals: ["attack", "agi", "ac"],
+  //   effects: [
+  //     "1: Effect type: Increase Attack Speed by 20%",
+  //     "2: Effect type: Increase AGI by 23 (L36) to 37 (L65)",
+  //     "3: Effect type: Increase AC for Cloth Casters by 7 (L36) to 12 (L65), Everyone else by 4 (L36) to 9 (L65)"
+  //   ]
+  // },
   {
     name: "Psalm of Purity",
     level: 37,
@@ -453,18 +465,18 @@ const SONGS = [
       "4: Effect type: Increase AC for Cloth Casters by 5 (L41) to 8 (L65), Everyone else by 3 (L41) to 5 (L65)"
     ]
   },
-  {
-    name: "McVaxius' Berserker Crescendo",
-    level: 42,
-    targetType: "Group",
-    skill: "Brass_instruments",
-    goals: ["attackSpeed", "str", "ac"],
-    effects: [
-      "1: Effect type: Increase Attack Speed by 18% (L42) to 24% (L65)",
-      "2: Effect type: Increase STR by 15 (L42) to 22 (L65)",
-      "3: Effect type: Increase AC for Cloth Casters by 8 (L42) to 12 (L65), Everyone else by 5 (L42) to 9 (L65)"
-    ]
-  },
+  // {
+  //   name: "McVaxius' Berserker Crescendo",
+  //   level: 42,
+  //   targetType: "Group",
+  //   skill: "Brass_instruments",
+  //   goals: ["attack", "str", "ac"],
+  //   effects: [
+  //     "1: Effect type: Increase Attack Speed by 18% (L42) to 24% (L65)",
+  //     "2: Effect type: Increase STR by 15 (L42) to 22 (L65)",
+  //     "3: Effect type: Increase AC for Cloth Casters by 8 (L42) to 12 (L65), Everyone else by 5 (L42) to 9 (L65)"
+  //   ]
+  // },
   {
     name: "Tuyen's Chant of Disease",
     level: 42,
@@ -565,25 +577,25 @@ const SONGS = [
       "1: Effect type: Increase Movement by 64% (L49) to 65% (L50)"
     ]
   },
-  {
-    name: "Verses of Victory",
-    level: 50,
-    targetType: "Group",
-    skill: "Singing",
-    goals: ["attackSpeed", "agi", "ac", "str"],
-    effects: [
-      "1: Effect type: Increase Attack Speed by 30%",
-      "2: Effect type: Increase AGI by 30",
-      "3: Effect type: Increase AC for Cloth Casters by 18, Everyone else by 14",
-      "4: Effect type: Increase STR by 30"
-    ]
-  },
+  // {
+  //   name: "Verses of Victory",
+  //   level: 50,
+  //   targetType: "Group",
+  //   skill: "Singing",
+  //   goals: ["attack", "agi", "ac", "str"],
+  //   effects: [
+  //     "1: Effect type: Increase Attack Speed by 30%",
+  //     "2: Effect type: Increase AGI by 30",
+  //     "3: Effect type: Increase AC for Cloth Casters by 18, Everyone else by 14",
+  //     "4: Effect type: Increase STR by 30"
+  //   ]
+  // },
   {
     name: "Melody of Ervaj",
     level: 50,
     targetType: "Group",
     skill: "Brass_instruments",
-    goals: ["haste", "ac"],
+    goals: ["haste", "ac", "atk", "attack"],
     effects: [
       "1: Effect type: Increase Haste v2 by 105%",
       "4: Effect type: Increase AC for Cloth Casters by 5 (L50) to 8 (L65), Everyone else by 4 (L50) to 5 (L65)"
@@ -643,7 +655,7 @@ const SONGS = [
     level: 52,
     targetType: "Group",
     skill: "Brass_instruments",
-    goals: ["haste"],
+    goals: ["haste", "atk", "attack"],
     effects: [
       "1: Effect type: Increase Haste v3 by 15%"
     ]
@@ -685,7 +697,7 @@ const SONGS = [
     level: 54,
     targetType: "Group",
     skill: "Singing",
-    goals: ["attackSpeed"],
+    goals: ["attack"],
     effects: [
       "1: Effect type: Increase Attack Speed by 45%"
     ]
@@ -919,7 +931,7 @@ const SONGS = [
     level: 60,
     targetType: "Group",
     skill: "Brass_instruments",
-    goals: ["haste", "ac"],
+    goals: ["haste", "ac", "atk", "attack"],
     effects: [
       "1: Effect type: Increase Haste v2 by 110%",
       "4: Effect type: Increase AC for Cloth Casters by 11, Everyone else by 8"
@@ -951,7 +963,7 @@ const SONGS = [
     level: 60,
     targetType: "Group",
     skill: "Brass_instruments",
-    goals: ["haste"],
+    goals: ["haste", "atk", "attack"],
     effects: [
       "1: Effect type: Increase Haste v3 by 25%"
     ]
@@ -1105,19 +1117,10 @@ const SONGS = [
     level: 64,
     targetType: "Group",
     skill: "Singing",
-    goals: ["spellDamage", "haste", "limit"],
+    goals: ["spellDamage", "haste", "limit", "atk", "attack"],
     effects: [
       "1: Effect type: Increase Spell Damage by 15%",
-      "2: Effect type: Increase Haste v3 by 30%",
-      "3: Effect type: Limit: Effect(Hitpoints)",
-      "4: Effect type: Limit: Instant spells only",
-      "5: Effect type: Limit: Spell Type (Detrimental only)",
-      "6: Effect type: Limit: Target (Area of effect over the caster excluded)",
-      "7: Effect type: Limit: Target (Area of effect around the caster excluded)",
-      "8: Effect type: Limit: Target (Area of effect around the target excluded)",
-      "9: Effect type: Limit: Target (Giant excluded)",
-      "10: Effect type: Limit: Target (Dragon excluded)",
-      "11: Effect type: Limit: Max Level (65)"
+      "2: Effect type: Increase Haste v3 by 30%"
     ]
   },
   {
@@ -1187,6 +1190,21 @@ const SONGS = [
   }
 ];
 
+// For each song, if any effect includes 'Increase ATK', add 'attack' to its goals if not present
+SONGS.forEach(song => {
+  const hasAtkEffect = song.effects.some(e => e.includes('Increase ATK'));
+  if (hasAtkEffect && !song.goals.includes('attack')) {
+    song.goals.push('attack');
+  }
+});
+
+// For each song with targetType "Self only", add (Self) to the name if not already present
+SONGS.forEach(song => {
+  if (song.targetType === "Self only" && !song.name.endsWith(" (Self)")) {
+    song.name += " (Self)";
+  }
+});
+
 function getRecommendedSongs(selectedGoals) {
   if (selectedGoals.length === 0) return [];
   // Show songs that match ANY selected goal
@@ -1196,8 +1214,44 @@ function getRecommendedSongs(selectedGoals) {
 }
 
 function App() {
+  // Skill type to icon mapping (using emoji for simplicity)
+  const SKILL_ICONS = {
+    Percussion_instruments: '🥁',
+    Singing: '🎤',
+    Wind_instruments: '🎷',
+    Brass_instruments: '🎺',
+    Stringed_instruments: '🎸'
+  };
+  const [amplificationActive, setAmplificationActive] = useState(false);
+  const [puretoneActive, setPuretoneActive] = useState(false);
   const [selectedGoals, setSelectedGoals] = useState([]);
   const [includePoP, setIncludePoP] = useState(false);
+  const [haveEpic, setHaveEpic] = useState(true);
+  const [instrumentMastery, setInstrumentMastery] = useState(0);
+  const [singingMastery, setSingingMastery] = useState(0);
+  const [singingClicky, setSingingClicky] = useState(1); // 1=None, 2=VOTS, 3=Shei cloak
+  const [percussionInstrument, setPercussionInstrument] = useState(0); // 0=None, 1=Combine, 2=Selo, 3=DoTB
+  const [brassInstrument, setBrassInstrument] = useState(0); // 0=None, 1=Combine, 2=McVax, 3=Immaculate, 4=Denon
+  const [stringedInstrument, setStringedInstrument] = useState(0); // 0=None, 1=Combine, 2=Kelin, 3=Lyran
+  const PERCUSSION_OPTIONS = [
+    { label: "None", mod: 0 },
+    { label: "Combine", mod: 1.0 },
+    { label: "Selo", mod: 1.4 },
+    { label: "DoTB", mod: 1.6 }
+  ];
+  const BRASS_OPTIONS = [
+    { label: "None", mod: 0 },
+    { label: "Combine 1.2", mod: 1.2 },
+    { label: "McVax 1.3", mod: 1.3 },
+    { label: "Immaculate 1.4", mod: 1.4 },
+    { label: "Denon 1.4", mod: 1.4 }
+  ];
+  const STRINGED_OPTIONS = [
+    { label: "None", mod: 0 },
+    { label: "Combine 1.2", mod: 1.2 },
+    { label: "Kelin 1.4", mod: 1.4 },
+    { label: "Lyran 1.5", mod: 1.5 }
+  ];
 
   const handleGoalChange = (goalKey) => {
     setSelectedGoals((prev) =>
@@ -1219,8 +1273,39 @@ function App() {
   const recommendedSongs = getRecommendedSongsFiltered(selectedGoals);
 
   // Helper to parse effect value for a goal at a given level
-  function getEffectValue(song, goalKey, level = 60) {
-    if (!song || !song.effects) return '';
+  function getEffectValue(song, key, level = 60) {
+  if (!song || !song.effects) return '';
+  // Use the correct skill mod for this song
+  const instrumentMod = getSkillMod(song.skill);
+    // Haste columns are never modified
+    if (key === 'haste') {
+      const effectStr = song.effects.find(e => /Increase Attack Speed by \d+%/.test(e));
+      if (effectStr) {
+        const match = effectStr.match(/Increase Attack Speed by (\d+)%/);
+        if (match) return match[1] + '%';
+      }
+      return '';
+    }
+    if (key === 'hasteV2') {
+      const effectStr = song.effects.find(e => /Increase Haste v2 by \d+%/.test(e));
+      if (effectStr) {
+        const match = effectStr.match(/Increase Haste v2 by (\d+)%/);
+        if (match) {
+          const val = parseInt(match[1], 10) - 100;
+          if (val > 0) return val + '%';
+          return '';
+        }
+      }
+      return '';
+    }
+    if (key === 'hasteV3') {
+      const effectStr = song.effects.find(e => /Increase Haste v3 by \d+%/.test(e));
+      if (effectStr) {
+        const match = effectStr.match(/Increase Haste v3 by (\d+)%/);
+        if (match) return match[1] + '%';
+      }
+      return '';
+    }
     // Map goalKey to effect type string
     const effectTypeMap = {
       magicResist: 'Increase Magic Resist',
@@ -1230,12 +1315,10 @@ function App() {
       diseaseResist: 'Increase Disease Resist',
       attack: 'Increase ATK',
       damageShield: 'Increase Damage Shield',
-      manaRegen: 'Increase Mana',
       healthRegen: 'Increase Hitpoints',
     };
-    const effectType = effectTypeMap[goalKey];
+    const effectType = effectTypeMap[key];
     if (!effectType) return '';
-    // Find matching effect
     const effectStr = song.effects.find(e => e.includes(effectType));
     if (!effectStr) return '';
     // Try to extract value for (Lx) to (Ly) pattern
@@ -1245,16 +1328,19 @@ function App() {
       const lStart = parseInt(match[2], 10);
       const vEnd = parseInt(match[3], 10);
       const lEnd = parseInt(match[4], 10);
-      // Linear interpolation
-      if (level <= lStart) return vStart;
-      if (level >= lEnd) return vEnd;
-      const slope = (vEnd - vStart) / (lEnd - lStart);
-      return Math.round(vStart + slope * (level - lStart));
+      let val;
+      if (level <= lStart) val = vStart;
+      else if (level >= lEnd) val = vEnd;
+      else {
+        const slope = (vEnd - vStart) / (lEnd - lStart);
+        val = Math.round(vStart + slope * (level - lStart));
+      }
+      return Math.floor(val * instrumentMod);
     }
     // Try to extract value for 'by (\d+)' pattern (no range)
     const match2 = effectStr.match(/by (\d+)/);
     if (match2) {
-      return parseInt(match2[1], 10);
+      return Math.floor(parseInt(match2[1], 10) * instrumentMod);
     }
     return '';
   }
@@ -1262,12 +1348,16 @@ function App() {
   // Helper: get effect types for a song (for stacking logic)
   function getSongEffectTypes(song) {
     if (!song || !song.effects) return [];
-    // Return array of {slot, effectType} objects
+    // Only include effects with a numeric value or 'by' in effectType
     return song.effects.map(e => {
       // Match slot number and effect type
-      const m = e.match(/^(\d+): Effect type: ([^\(,]+)/);
+      const m = e.match(/^([0-9]+): Effect type: ([^\(,]+)/);
       if (m) {
-        return { slot: parseInt(m[1], 10), effectType: m[2].trim() };
+        const effectType = m[2].trim();
+        // Only include if effectType contains 'by' or a digit
+        if (/by|\d/.test(effectType)) {
+          return { slot: parseInt(m[1], 10), effectType };
+        }
       }
       return null;
     }).filter(Boolean);
@@ -1275,20 +1365,28 @@ function App() {
 
   // Find non-stacking songs in the melody slots
   function getNonStackingIndices(songs) {
-    // For each slot, store an array of slot indices it conflicts with (only previous slots)
+    // For each slot, store an array of stacking conflicts: {conflictIdx, slot, effectType}
     const stackingConflicts = Array(songs.length).fill(null).map(() => []);
-    // For each song, get its effects as {slot, effectType}
     const songEffects = songs.map(song => song ? getSongEffectTypes(song) : []);
+    // Helper to normalize effectType: only compare text before 'by', ignore numbers
+    function normalizeEffectType(effectType) {
+      const idx = effectType.toLowerCase().indexOf(' by');
+      return idx !== -1 ? effectType.slice(0, idx).trim().toLowerCase() : effectType.trim().toLowerCase();
+    }
     for (let i = 0; i < songs.length; i++) {
       if (!songs[i]) continue;
       for (const effA of songEffects[i]) {
         for (let j = 0; j < i; j++) {
           if (!songs[j]) continue;
           for (const effB of songEffects[j]) {
-            // If slot number matches and effectType matches (or is a close match)
-            if (effA.slot === effB.slot && effA.effectType.toLowerCase() === effB.effectType.toLowerCase()) {
-              if (!stackingConflicts[i].includes(j)) stackingConflicts[i].push(j);
-              if (!stackingConflicts[j].includes(i)) stackingConflicts[j].push(i);
+            // If slot number matches and effectType matches (ignoring numbers after 'by')
+            if (
+              effA.slot === effB.slot &&
+              normalizeEffectType(effA.effectType) === normalizeEffectType(effB.effectType)
+            ) {
+              // Add a conflict for each slot/effectType
+              stackingConflicts[i].push({ conflictIdx: j, slot: effA.slot, effectType: effA.effectType });
+              stackingConflicts[j].push({ conflictIdx: i, slot: effB.slot, effectType: effB.effectType });
             }
           }
         }
@@ -1297,7 +1395,23 @@ function App() {
     return stackingConflicts;
   }
 
-  const MELODY_SLOTS = 10;
+// Debug output for stacking logic for three songs
+const debugSongs = [
+  SONGS.find(s => s.name === "Purifying Rhythms"),
+  SONGS.find(s => s.name === "Purifying Chorus"),
+  SONGS.find(s => s.name === "Psalm of Purity")
+];
+debugSongs.forEach(song => {
+  if (song) {
+    console.log(`Debug: getSongEffectTypes for ${song.name}:`, getSongEffectTypes(song));
+  }
+});
+console.log(
+  "Debug: getNonStackingIndices for [Purifying Rhythms, Purifying Chorus, Psalm of Purity]:",
+  getNonStackingIndices(debugSongs)
+);
+
+  const MELODY_SLOTS = 30;
   const [removedIndices, setRemovedIndices] = useState([]);
   const melodySongs = [...Array(MELODY_SLOTS)].map((_, idx) =>
     removedIndices.includes(idx) ? null : (recommendedSongs[idx] || null)
@@ -1309,18 +1423,246 @@ function App() {
     setRemovedIndices([]);
   }, [selectedGoals, includePoP]);
 
+  // Skill names for modifier table
+  const SKILLS = [
+    { key: 'Percussion', label: 'Percussion' },
+    { key: 'Stringed', label: 'Stringed' },
+    { key: 'Wind', label: 'Wind' },
+    { key: 'Brass', label: 'Brass' },
+    { key: 'Singing', label: 'Singing' }
+  ];
+  // Calculate per-skill modifier
+  function getSkillMod(skillKey) {
+    // Epic is +0.8 mod to all types, does not stack with higher instrument mod
+    // Puretone overrides instrument mod to 1.8 for all types
+    let mod;
+    if (puretoneActive) {
+      if (skillKey === 'Singing') {
+        let clickyMod = 0;
+        if (singingClicky === 2) clickyMod = 0.6;
+        if (singingClicky === 3) clickyMod = 0.9;
+        let ampMod = amplificationActive ? 0.9 : 0;
+        mod = 1.0 + 1.8 + singingMastery * 0.2 + clickyMod + ampMod;
+      } else {
+        let masteryMod = instrumentMastery * 0.2;
+        mod = 1.0 + 1.8 + masteryMod;
+      }
+    } else {
+      let masteryMod = instrumentMastery * 0.2;
+      if (skillKey === 'Singing') {
+        let clickyMod = 0;
+        if (singingClicky === 2) clickyMod = 0.6;
+        if (singingClicky === 3) clickyMod = 0.9;
+        let ampMod = amplificationActive ? 0.9 : 0;
+        let epicMod = haveEpic ? 0.8 : 0;
+        mod = 1.0 + epicMod + singingMastery * 0.2 + clickyMod + ampMod;
+      } else {
+        let instrumentMod = 0;
+        if (skillKey === 'Percussion') {
+          instrumentMod = PERCUSSION_OPTIONS[percussionInstrument]?.mod || 0;
+        }
+        if (skillKey === 'Brass') {
+          instrumentMod = BRASS_OPTIONS[brassInstrument]?.mod || 0;
+        }
+        if (skillKey === 'Stringed') {
+          instrumentMod = STRINGED_OPTIONS[stringedInstrument]?.mod || 0;
+        }
+        if (skillKey === 'Wind') {
+          instrumentMod = 0;
+        }
+        // Epic acts as a 0.8 mod instrument for all types if instrument mod is less than 0.8
+        let epicMod = haveEpic ? 0.8 : 0;
+        let finalInstrumentMod = instrumentMod < epicMod ? epicMod : instrumentMod;
+        mod = 1.0 + finalInstrumentMod + masteryMod;
+      }
+    }
+    return Math.min(mod, 3.6);
+  }
+
   return (
     <div className="container">
       <h1>Bard Melody Selector</h1>
+      <table className="controls-table" style={{ marginBottom: '1em', minWidth: '350px' }}>
+        <tbody>
+          <tr>
+            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Have Epic?</td>
+            <td>
+              <input
+                type="checkbox"
+                checked={haveEpic}
+                onChange={() => setHaveEpic((v) => !v)}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Amplification active?</td>
+            <td>
+              <input
+                type="checkbox"
+                checked={amplificationActive}
+                onChange={() => setAmplificationActive((v) => !v)}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Puretone active?</td>
+            <td>
+              <input
+                type="checkbox"
+                checked={puretoneActive}
+                onChange={() => setPuretoneActive((v) => !v)}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Drum (Percussion) Instrument</td>
+            <td>
+              {PERCUSSION_OPTIONS.map((opt, idx) => (
+                <label key={opt.label} style={{ marginRight: '0.5em' }}>
+                  <input
+                    type="radio"
+                    name="percussionInstrument"
+                    value={idx}
+                    checked={percussionInstrument === idx}
+                    onChange={() => setPercussionInstrument(idx)}
+                  />
+                  {opt.label}
+                </label>
+              ))}
+            </td>
+          </tr>
+          <tr>
+            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Stringed Instrument</td>
+            <td>
+              {STRINGED_OPTIONS.map((opt, idx) => (
+                <label key={opt.label} style={{ marginRight: '0.5em' }}>
+                  <input
+                    type="radio"
+                    name="stringedInstrument"
+                    value={idx}
+                    checked={stringedInstrument === idx}
+                    onChange={() => setStringedInstrument(idx)}
+                  />
+                  {opt.label}
+                </label>
+              ))}
+            </td>
+          </tr>
+          <tr>
+            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Brass Instrument</td>
+            <td>
+              {BRASS_OPTIONS.map((opt, idx) => (
+                <label key={opt.label} style={{ marginRight: '0.5em' }}>
+                  <input
+                    type="radio"
+                    name="brassInstrument"
+                    value={idx}
+                    checked={brassInstrument === idx}
+                    onChange={() => setBrassInstrument(idx)}
+                  />
+                  {opt.label}
+                </label>
+              ))}
+            </td>
+          </tr>
+          <tr>
+            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Instrument Mastery</td>
+            <td>
+              {[0, 1, 2, 3].map(val => (
+                <label key={val} style={{ marginRight: '0.5em' }}>
+                  <input
+                    type="radio"
+                    name="instrumentMastery"
+                    value={val}
+                    checked={instrumentMastery === val}
+                    onChange={() => setInstrumentMastery(val)}
+                  />
+                  {val}
+                </label>
+              ))}
+            </td>
+          </tr>
+          <tr>
+            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Singing Mastery</td>
+            <td>
+              {[0, 1, 2, 3].map(val => (
+                <label key={val} style={{ marginRight: '0.5em' }}>
+                  <input
+                    type="radio"
+                    name="singingMastery"
+                    value={val}
+                    checked={singingMastery === val}
+                    onChange={() => setSingingMastery(val)}
+                  />
+                  {val}
+                </label>
+              ))}
+            </td>
+          </tr>
+          <tr>
+            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Singing clicky</td>
+            <td>
+              <label style={{ marginRight: '0.5em' }}>
+                <input
+                  type="radio"
+                  name="singingClicky"
+                  value={1}
+                  checked={singingClicky === 1}
+                  onChange={() => setSingingClicky(1)}
+                />
+                None
+              </label>
+              <label style={{ marginRight: '0.5em' }}>
+                <input
+                  type="radio"
+                  name="singingClicky"
+                  value={2}
+                  checked={singingClicky === 2}
+                  onChange={() => setSingingClicky(2)}
+                />
+                <a href="https://www.pqdi.cc/item/8215" target="_blank" rel="noopener noreferrer">VOTS</a>
+              </label>
+              <label style={{ marginRight: '0.5em' }}>
+                <input
+                  type="radio"
+                  name="singingClicky"
+                  value={3}
+                  checked={singingClicky === 3}
+                  onChange={() => setSingingClicky(3)}
+                />
+                <a href="https://www.pqdi.cc/item/26574" target="_blank" rel="noopener noreferrer">Shei cloak</a>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Include PoP Songs (Level 61-65)</td>
+            <td>
+              <input
+                type="checkbox"
+                checked={includePoP}
+                onChange={() => setIncludePoP((v) => !v)}
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table className="mod-table" style={{ marginBottom: '1em', minWidth: '350px' }}>
+        <thead>
+          <tr>
+            <th>Skill</th>
+            <th>Modifier</th>
+          </tr>
+        </thead>
+        <tbody>
+          {SKILLS.map(skill => (
+            <tr key={skill.key}>
+              <td>{skill.label}</td>
+              <td>{getSkillMod(skill.key).toFixed(1)}x</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <p>Select your goals to see recommended song melodies:</p>
-      <label className="pop-checkbox">
-        <input
-          type="checkbox"
-          checked={includePoP}
-          onChange={() => setIncludePoP((v) => !v)}
-        />
-        Include PoP Songs (Level 61-65)
-      </label>
       <div className="goals">
         {GOALS.map((goal) => {
           const isActive = selectedGoals.includes(goal.key);
@@ -1331,7 +1673,14 @@ function App() {
               onClick={() => handleGoalChange(goal.key)}
               type="button"
             >
-              <img src={hymnIcon} alt="icon" className="goal-icon" />
+              {goal.key === 'attack' && <img src={attackIcon} alt="icon" className="goal-icon" />}
+              {goal.key === 'coldResist' && <img src={coldIcon} alt="icon" className="goal-icon" />}
+              {goal.key === 'diseaseResist' && <img src={diseaseIcon} alt="icon" className="goal-icon" />}
+              {goal.key === 'fireResist' && <img src={fireIcon} alt="icon" className="goal-icon" />}
+              {goal.key === 'magicResist' && <img src={magicIcon} alt="icon" className="goal-icon" />}
+              {goal.key === 'poisonResist' && <img src={poisonIcon} alt="icon" className="goal-icon" />}
+              {goal.key === 'damageShield' && <img src={thornsIcon} alt="icon" className="goal-icon" />}
+              {goal.key === 'healthRegen' && <img src={hymnIcon} alt="icon" className="goal-icon" />}
               <span className="goal-label-text">{goal.label}</span>
             </button>
           );
@@ -1342,65 +1691,53 @@ function App() {
         <table className="melody-table">
           <thead>
             <tr>
-              <th style={{ width: '1%' }}></th>
-              <th>Song</th>
-              {GOALS.map(goal => (
-                <th key={goal.key}>{goal.label}</th>
+              <th style={{ width: '1%', textAlign: 'left' }}></th>
+              <th style={{ width: '18em', textAlign: 'left' }}>Song</th>
+              {INFO_COLUMNS.map(col => (
+                <th key={col.key} style={{ textAlign: 'left' }}>{col.label}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {melodySongs.map((song, idx) => (
               <tr key={idx} className={stackingConflicts[idx].length > 0 ? 'non-stacking-row' : ''}>
-                <td>
-                  {song && stackingConflicts[idx].map((conflictIdx, btnIdx) => (
+                <td style={{ textAlign: 'left' }}>
+                  {song && stackingConflicts[idx].length > 0 && (
                     <button
-                      key={conflictIdx}
-                      className={`stacking-remove-btn stacking-conflict-${['red','blue','purple','green'][btnIdx % 4]}`}
+                      key={idx + '-stack-conflict'}
+                      className="stacking-remove-btn stacking-conflict-red"
                       type="button"
+                      title={
+                        stackingConflicts[idx]
+                          .map(conflict => `Slot ${conflict.slot}: ${conflict.effectType}`)
+                          .join('\n')
+                      }
                       onClick={() => {
-                        setRemovedIndices(prev => [...prev, conflictIdx]);
+                        setRemovedIndices(prev => [...prev, idx]);
                       }}
                     >
                       Stack -
                     </button>
-                  ))}
+                  )}
                 </td>
-                <td>
+                <td style={{ textAlign: 'left' }}>
                   {song ? (
                     <>
-                      <img src={hymnIcon} alt="song icon" className="song-icon" />
+                      <span style={{ marginRight: '0.3em' }}>{SKILL_ICONS[song.skill] || ''}</span>
                       <span className="song-label-text">{song.name}</span>
                     </>
                   ) : (
                     <span className="song-label-text empty-slot">(empty)</span>
                   )}
                 </td>
-                {GOALS.map(goal => (
-                  <td key={goal.key}>{song ? getEffectValue(song, goal.key, 60) : ''}</td>
+                {INFO_COLUMNS.map(col => (
+                  <td key={col.key} style={{ textAlign: 'left' }}>{song ? getEffectValue(song, col.key, 60) : ''}</td>
                 ))}
               </tr>
             ))}
           </tbody>
         </table>
-        {recommendedSongs.length > MELODY_SLOTS && (
-          <>
-            <h3 className="overflow-title">Overflow Songs</h3>
-            <ul className="overflow-list">
-              {recommendedSongs.slice(MELODY_SLOTS, MELODY_SLOTS + 4).map((song, idx) => (
-                <li key={idx} className="overflow-item">
-                  <img src={hymnIcon} alt="song icon" className="overflow-icon" />
-                  <span className="overflow-label-text">{song.name}</span>
-                </li>
-              ))}
-              {[...Array(4 - Math.min(4, recommendedSongs.length - MELODY_SLOTS))].map((_, idx) => (
-                <li key={`empty-overflow-${idx}`} className="overflow-item">
-                  <span className="overflow-label-text empty-slot">(empty)</span>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
+  {/* Overflow songs removed as requested */}
       </div>
     </div>
   );
