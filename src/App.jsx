@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import hymnIcon from './assets/hymn.gif';
 import attackIcon from './assets/attack.gif';
@@ -1213,6 +1213,39 @@ function getRecommendedSongs(selectedGoals) {
   );
 }
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 768);
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  return isMobile;
+}
+
+function MobileView({ controlsTable, modTable, goalsRow, melodyTable }) {
+  return (
+    <div className="container mobile-view">
+      <h1 style={{ fontSize: '1.5em', textAlign: 'center', margin: '1em 0' }}>Bard Melody Selector</h1>
+      <div style={{ display: 'block', marginBottom: '1em' }}>
+        <div style={{ marginBottom: '1em' }}>{controlsTable}</div>
+        <div>{modTable}</div>
+      </div>
+      <div className="goals mobile-goals" style={{ flexWrap: 'wrap', justifyContent: 'center', marginBottom: '1em' }}>
+        {goalsRow}
+      </div>
+      <div style={{ overflowX: 'auto', marginBottom: '2em' }}>
+        {melodyTable}
+      </div>
+      <div style={{ textAlign: 'center', margin: '2em 0' }}>
+        <button onClick={() => window.scrollTo(0, 0)} style={{ fontSize: '1em', padding: '0.5em 1em' }}>Back to Top</button>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   // Skill type to icon mapping (using emoji for simplicity)
   const SKILL_ICONS = {
@@ -1395,22 +1428,6 @@ function App() {
     return stackingConflicts;
   }
 
-// Debug output for stacking logic for three songs
-const debugSongs = [
-  SONGS.find(s => s.name === "Purifying Rhythms"),
-  SONGS.find(s => s.name === "Purifying Chorus"),
-  SONGS.find(s => s.name === "Psalm of Purity")
-];
-debugSongs.forEach(song => {
-  if (song) {
-    console.log(`Debug: getSongEffectTypes for ${song.name}:`, getSongEffectTypes(song));
-  }
-});
-console.log(
-  "Debug: getNonStackingIndices for [Purifying Rhythms, Purifying Chorus, Psalm of Purity]:",
-  getNonStackingIndices(debugSongs)
-);
-
   const MELODY_SLOTS = 30;
   const [removedIndices, setRemovedIndices] = useState([]);
   const melodySongs = [...Array(MELODY_SLOTS)].map((_, idx) =>
@@ -1479,189 +1496,282 @@ console.log(
     return Math.min(mod, 3.6);
   }
 
-  return (
+  // Compose reusable chunks for both views
+  const controlsTable = (
+    <table className="controls-table" style={{ minWidth: '350px' }}>
+      <tbody>
+        <tr>
+          <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Have Epic?</td>
+          <td>
+            <input
+              type="checkbox"
+              checked={haveEpic}
+              onChange={() => setHaveEpic((v) => !v)}
+            />
+          </td>
+        </tr>
+        <tr>
+          <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Amplification active?</td>
+          <td>
+            <input
+              type="checkbox"
+              checked={amplificationActive}
+              onChange={() => setAmplificationActive((v) => !v)}
+            />
+          </td>
+        </tr>
+        <tr>
+          <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Puretone active?</td>
+          <td>
+            <input
+              type="checkbox"
+              checked={puretoneActive}
+              onChange={() => setPuretoneActive((v) => !v)}
+            />
+          </td>
+        </tr>
+        <tr>
+          <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Drum (Percussion) Instrument</td>
+          <td>
+            {PERCUSSION_OPTIONS.map((opt, idx) => (
+              <label key={opt.label} style={{ marginRight: '0.5em' }}>
+                <input
+                  type="radio"
+                  name="percussionInstrument"
+                  value={idx}
+                  checked={percussionInstrument === idx}
+                  onChange={() => setPercussionInstrument(idx)}
+                />
+                {opt.label}
+              </label>
+            ))}
+          </td>
+        </tr>
+        <tr>
+          <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Stringed Instrument</td>
+          <td>
+            {STRINGED_OPTIONS.map((opt, idx) => (
+              <label key={opt.label} style={{ marginRight: '0.5em' }}>
+                <input
+                  type="radio"
+                  name="stringedInstrument"
+                  value={idx}
+                  checked={stringedInstrument === idx}
+                  onChange={() => setStringedInstrument(idx)}
+                />
+                {opt.label}
+              </label>
+            ))}
+          </td>
+        </tr>
+        <tr>
+          <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Brass Instrument</td>
+          <td>
+            {BRASS_OPTIONS.map((opt, idx) => (
+              <label key={opt.label} style={{ marginRight: '0.5em' }}>
+                <input
+                  type="radio"
+                  name="brassInstrument"
+                  value={idx}
+                  checked={brassInstrument === idx}
+                  onChange={() => setBrassInstrument(idx)}
+                />
+                {opt.label}
+              </label>
+            ))}
+          </td>
+        </tr>
+        <tr>
+          <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Instrument Mastery</td>
+          <td>
+            {[0, 1, 2, 3].map(val => (
+              <label key={val} style={{ marginRight: '0.5em' }}>
+                <input
+                  type="radio"
+                  name="instrumentMastery"
+                  value={val}
+                  checked={instrumentMastery === val}
+                  onChange={() => setInstrumentMastery(val)}
+                />
+                {val}
+              </label>
+            ))}
+          </td>
+        </tr>
+        <tr>
+          <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Singing Mastery</td>
+          <td>
+            {[0, 1, 2, 3].map(val => (
+              <label key={val} style={{ marginRight: '0.5em' }}>
+                <input
+                  type="radio"
+                  name="singingMastery"
+                  value={val}
+                  checked={singingMastery === val}
+                  onChange={() => setSingingMastery(val)}
+                />
+                {val}
+              </label>
+            ))}
+          </td>
+        </tr>
+        <tr>
+          <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Singing clicky</td>
+          <td>
+            <label style={{ marginRight: '0.5em' }}>
+              <input
+                type="radio"
+                name="singingClicky"
+                value={1}
+                checked={singingClicky === 1}
+                onChange={() => setSingingClicky(1)}
+              />
+              None
+            </label>
+            <label style={{ marginRight: '0.5em' }}>
+              <input
+                type="radio"
+                name="singingClicky"
+                value={2}
+                checked={singingClicky === 2}
+                onChange={() => setSingingClicky(2)}
+              />
+              <a href="https://www.pqdi.cc/item/8215" target="_blank" rel="noopener noreferrer">VOTS</a>
+            </label>
+            <label style={{ marginRight: '0.5em' }}>
+              <input
+                type="radio"
+                name="singingClicky"
+                value={3}
+                checked={singingClicky === 3}
+                onChange={() => setSingingClicky(3)}
+              />
+              <a href="https://www.pqdi.cc/item/26574" target="_blank" rel="noopener noreferrer">Shei cloak</a>
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Include PoP Songs (Level 61-65)</td>
+          <td>
+            <input
+              type="checkbox"
+              checked={includePoP}
+              onChange={() => setIncludePoP((v) => !v)}
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  );
+  const modTable = (
+    <table className="mod-table" style={{ minWidth: '350px' }}>
+      <thead>
+        <tr>
+          <th>Skill</th>
+          <th>Modifier</th>
+        </tr>
+      </thead>
+      <tbody>
+        {SKILLS.map(skill => (
+          <tr key={skill.key}>
+            <td>{skill.label}</td>
+            <td>{getSkillMod(skill.key).toFixed(1)}x</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+  const goalsRow = (
+    <>
+      {GOALS.map((goal) => {
+        const isActive = selectedGoals.includes(goal.key);
+        return (
+          <button
+            key={goal.key}
+            className={`goal-btn${isActive ? ' active' : ''}`}
+            onClick={() => handleGoalChange(goal.key)}
+            type="button"
+          >
+            {goal.key === 'attack' && <img src={attackIcon} alt="icon" className="goal-icon" />}
+            {goal.key === 'coldResist' && <img src={coldIcon} alt="icon" className="goal-icon" />}
+            {goal.key === 'diseaseResist' && <img src={diseaseIcon} alt="icon" className="goal-icon" />}
+            {goal.key === 'fireResist' && <img src={fireIcon} alt="icon" className="goal-icon" />}
+            {goal.key === 'magicResist' && <img src={magicIcon} alt="icon" className="goal-icon" />}
+            {goal.key === 'poisonResist' && <img src={poisonIcon} alt="icon" className="goal-icon" />}
+            {goal.key === 'damageShield' && <img src={thornsIcon} alt="icon" className="goal-icon" />}
+            {goal.key === 'healthRegen' && <img src={hymnIcon} alt="icon" className="goal-icon" />}
+            <span className="goal-label-text">{goal.label}</span>
+          </button>
+        );
+      })}
+    </>
+  );
+  const melodyTable = (
+    <table className="melody-table">
+      <thead>
+        <tr>
+          <th style={{ width: '1%', textAlign: 'left' }}></th>
+          <th style={{ width: '18em', textAlign: 'left' }}>Song</th>
+          {INFO_COLUMNS.map(col => (
+            <th key={col.key} style={{ textAlign: 'left' }}>{col.label}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {melodySongs.map((song, idx) => (
+          <tr key={idx} className={stackingConflicts[idx].length > 0 ? 'non-stacking-row' : ''}>
+            <td style={{ textAlign: 'left' }}>
+              {song && stackingConflicts[idx].length > 0 && (
+                <button
+                  key={idx + '-stack-conflict'}
+                  className="stacking-remove-btn stacking-conflict-red"
+                  type="button"
+                  title={
+                    stackingConflicts[idx]
+                      .map(conflict => `Slot ${conflict.slot}: ${conflict.effectType}`)
+                      .join('\n')
+                  }
+                  onClick={() => {
+                    setRemovedIndices(prev => [...prev, idx]);
+                  }}
+                >
+                  Stack -
+                </button>
+                                                     )}
+            </td>
+            <td style={{ textAlign: 'left' }}>
+              {song ? (
+                <>
+                  <span style={{ marginRight: '0.3em' }}>{SKILL_ICONS[song.skill] || ''}</span>
+                  <span className="song-label-text">{song.name}</span>
+                </>
+              ) : (
+                <span className="song-label-text empty-slot">(empty)</span>
+              )}
+            </td>
+            {INFO_COLUMNS.map(col => (
+              <td key={col.key} style={{ textAlign: 'left' }}>{song ? getEffectValue(song, col.key, 60) : ''}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+
+  const [forceMobile, setForceMobile] = useState(false);
+  const isMobile = useIsMobile() || forceMobile;
+
+  if (isMobile) {
+    return <>
+      <MobileView controlsTable={controlsTable} modTable={modTable} goalsRow={goalsRow} melodyTable={melodyTable} />
+    </>;
+  }
+
+  return <>
     <div className="container">
       <h1>Bard Melody Selector</h1>
-      <table className="controls-table" style={{ marginBottom: '1em', minWidth: '350px' }}>
-        <tbody>
-          <tr>
-            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Have Epic?</td>
-            <td>
-              <input
-                type="checkbox"
-                checked={haveEpic}
-                onChange={() => setHaveEpic((v) => !v)}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Amplification active?</td>
-            <td>
-              <input
-                type="checkbox"
-                checked={amplificationActive}
-                onChange={() => setAmplificationActive((v) => !v)}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Puretone active?</td>
-            <td>
-              <input
-                type="checkbox"
-                checked={puretoneActive}
-                onChange={() => setPuretoneActive((v) => !v)}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Drum (Percussion) Instrument</td>
-            <td>
-              {PERCUSSION_OPTIONS.map((opt, idx) => (
-                <label key={opt.label} style={{ marginRight: '0.5em' }}>
-                  <input
-                    type="radio"
-                    name="percussionInstrument"
-                    value={idx}
-                    checked={percussionInstrument === idx}
-                    onChange={() => setPercussionInstrument(idx)}
-                  />
-                  {opt.label}
-                </label>
-              ))}
-            </td>
-          </tr>
-          <tr>
-            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Stringed Instrument</td>
-            <td>
-              {STRINGED_OPTIONS.map((opt, idx) => (
-                <label key={opt.label} style={{ marginRight: '0.5em' }}>
-                  <input
-                    type="radio"
-                    name="stringedInstrument"
-                    value={idx}
-                    checked={stringedInstrument === idx}
-                    onChange={() => setStringedInstrument(idx)}
-                  />
-                  {opt.label}
-                </label>
-              ))}
-            </td>
-          </tr>
-          <tr>
-            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Brass Instrument</td>
-            <td>
-              {BRASS_OPTIONS.map((opt, idx) => (
-                <label key={opt.label} style={{ marginRight: '0.5em' }}>
-                  <input
-                    type="radio"
-                    name="brassInstrument"
-                    value={idx}
-                    checked={brassInstrument === idx}
-                    onChange={() => setBrassInstrument(idx)}
-                  />
-                  {opt.label}
-                </label>
-              ))}
-            </td>
-          </tr>
-          <tr>
-            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Instrument Mastery</td>
-            <td>
-              {[0, 1, 2, 3].map(val => (
-                <label key={val} style={{ marginRight: '0.5em' }}>
-                  <input
-                    type="radio"
-                    name="instrumentMastery"
-                    value={val}
-                    checked={instrumentMastery === val}
-                    onChange={() => setInstrumentMastery(val)}
-                  />
-                  {val}
-                </label>
-              ))}
-            </td>
-          </tr>
-          <tr>
-            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Singing Mastery</td>
-            <td>
-              {[0, 1, 2, 3].map(val => (
-                <label key={val} style={{ marginRight: '0.5em' }}>
-                  <input
-                    type="radio"
-                    name="singingMastery"
-                    value={val}
-                    checked={singingMastery === val}
-                    onChange={() => setSingingMastery(val)}
-                  />
-                  {val}
-                </label>
-              ))}
-            </td>
-          </tr>
-          <tr>
-            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Singing clicky</td>
-            <td>
-              <label style={{ marginRight: '0.5em' }}>
-                <input
-                  type="radio"
-                  name="singingClicky"
-                  value={1}
-                  checked={singingClicky === 1}
-                  onChange={() => setSingingClicky(1)}
-                />
-                None
-              </label>
-              <label style={{ marginRight: '0.5em' }}>
-                <input
-                  type="radio"
-                  name="singingClicky"
-                  value={2}
-                  checked={singingClicky === 2}
-                  onChange={() => setSingingClicky(2)}
-                />
-                <a href="https://www.pqdi.cc/item/8215" target="_blank" rel="noopener noreferrer">VOTS</a>
-              </label>
-              <label style={{ marginRight: '0.5em' }}>
-                <input
-                  type="radio"
-                  name="singingClicky"
-                  value={3}
-                  checked={singingClicky === 3}
-                  onChange={() => setSingingClicky(3)}
-                />
-                <a href="https://www.pqdi.cc/item/26574" target="_blank" rel="noopener noreferrer">Shei cloak</a>
-              </label>
-            </td>
-          </tr>
-          <tr>
-            <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Include PoP Songs (Level 61-65)</td>
-            <td>
-              <input
-                type="checkbox"
-                checked={includePoP}
-                onChange={() => setIncludePoP((v) => !v)}
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <table className="mod-table" style={{ marginBottom: '1em', minWidth: '350px' }}>
-        <thead>
-          <tr>
-            <th>Skill</th>
-            <th>Modifier</th>
-          </tr>
-        </thead>
-        <tbody>
-          {SKILLS.map(skill => (
-            <tr key={skill.key}>
-              <td>{skill.label}</td>
-              <td>{getSkillMod(skill.key).toFixed(1)}x</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {controlsTable}
+      {modTable}
       <p>Select your goals to see recommended song melodies:</p>
       <div className="goals">
         {GOALS.map((goal) => {
@@ -1688,59 +1798,10 @@ console.log(
       </div>
       <div className="results">
         <h2>Melody Song Slots</h2>
-        <table className="melody-table">
-          <thead>
-            <tr>
-              <th style={{ width: '1%', textAlign: 'left' }}></th>
-              <th style={{ width: '18em', textAlign: 'left' }}>Song</th>
-              {INFO_COLUMNS.map(col => (
-                <th key={col.key} style={{ textAlign: 'left' }}>{col.label}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {melodySongs.map((song, idx) => (
-              <tr key={idx} className={stackingConflicts[idx].length > 0 ? 'non-stacking-row' : ''}>
-                <td style={{ textAlign: 'left' }}>
-                  {song && stackingConflicts[idx].length > 0 && (
-                    <button
-                      key={idx + '-stack-conflict'}
-                      className="stacking-remove-btn stacking-conflict-red"
-                      type="button"
-                      title={
-                        stackingConflicts[idx]
-                          .map(conflict => `Slot ${conflict.slot}: ${conflict.effectType}`)
-                          .join('\n')
-                      }
-                      onClick={() => {
-                        setRemovedIndices(prev => [...prev, idx]);
-                      }}
-                    >
-                      Stack -
-                    </button>
-                  )}
-                </td>
-                <td style={{ textAlign: 'left' }}>
-                  {song ? (
-                    <>
-                      <span style={{ marginRight: '0.3em' }}>{SKILL_ICONS[song.skill] || ''}</span>
-                      <span className="song-label-text">{song.name}</span>
-                    </>
-                  ) : (
-                    <span className="song-label-text empty-slot">(empty)</span>
-                  )}
-                </td>
-                {INFO_COLUMNS.map(col => (
-                  <td key={col.key} style={{ textAlign: 'left' }}>{song ? getEffectValue(song, col.key, 60) : ''}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-  {/* Overflow songs removed as requested */}
+        {melodyTable}
       </div>
     </div>
-  );
+  </>;
 }
 
 export default App;
