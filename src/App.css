@@ -257,3 +257,30 @@
 .read-the-docs {
   color: #888;
 }
+/* Remove cell borders, add border around whole table */
+.controls-table, .mod-table {
+  border: 2px solid #bbb;
+  border-radius: 8px;
+  border-collapse: separate;
+}
+.controls-table th, .controls-table td,
+.mod-table th, .mod-table td {
+  border: none !important;
+  text-align: left !important;
+  color: #000 !important;
+}
+
+/* Zebra striping for controls-table and mod-table */
+.controls-table tbody tr:nth-child(even), .mod-table tbody tr:nth-child(even) {
+  background: #f6f6fa;
+}
+.controls-table tbody tr:nth-child(odd), .mod-table tbody tr:nth-child(odd) {
+  background: #fff;
+}
+
+/* Add horizontal border below table headers */
+.controls-table thead th, .mod-table thead th {
+  border-bottom: 2px solid #bbb !important;
+  background: #fff !important;
+  color: #000 !important;
+}

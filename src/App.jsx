@@ -1499,6 +1499,11 @@ function App() {
   // Compose reusable chunks for both views
   const controlsTable = (
     <table className="controls-table" style={{ minWidth: '350px' }}>
+      <thead>
+        <tr>
+          <th colSpan="2" style={{ fontWeight: 'bold', fontSize: '1.1em' }}>Instruments/AAs/Abilities</th>
+        </tr>
+      </thead>
       <tbody>
         <tr>
           <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Have Epic?</td>
