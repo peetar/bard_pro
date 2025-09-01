@@ -1,0 +1,269 @@
+.stacking-remove-btn {
+  background: #eee;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 0.9em;
+  cursor: pointer;
+  margin: 0 2px;
+}
+.stacking-conflict-red {
+  background: #ffcccc !important;
+  border-color: #d00 !important;
+}
+.stacking-conflict-blue {
+  background: #cce3ff !important;
+  border-color: #0074d9 !important;
+}
+.stacking-conflict-purple {
+  background: #e3ccff !important;
+  border-color: #8000ff !important;
+}
+.stacking-conflict-green {
+  background: #ccffcc !important;
+  border-color: #0a0 !important;
+}
+/* Melody Table Styling */
+.melody-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1em;
+}
+.melody-table th, .melody-table td {
+  padding: 0.6em 1em;
+  border: 1px solid #bbb;
+  text-align: left;
+}
+.melody-table thead th {
+  background: #e8e8f8;
+  font-weight: bold;
+}
+.melody-table tbody tr:nth-child(even) {
+  background: #f6f6fa;
+}
+.melody-table tbody tr:nth-child(odd) {
+  background: #ffffff;
+}
+.song-goal-table {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-left: 1rem;
+  align-items: center;
+}
+.song-goal-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60px;
+  font-size: 0.8rem;
+  background: #f7f7f7;
+  border-radius: 6px;
+  padding: 2px 4px;
+}
+.mini-goal-icon {
+  width: 18px;
+  height: 18px;
+  margin-bottom: 2px;
+}
+.mini-goal-label {
+  font-size: 0.7rem;
+  color: #888;
+}
+.mini-goal-value {
+  font-size: 0.9rem;
+  color: #222;
+  font-weight: bold;
+}
+.pop-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+.clear-btn {
+  margin-bottom: 1rem;
+  padding: 0.5rem 1.5rem;
+  background: #eee;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  color: #444;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, border 0.2s;
+}
+.clear-btn:hover {
+  background: #f8f8f8;
+  border-color: #888;
+}
+/* Overflow song slots styles */
+.overflow-title {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  color: #888;
+  font-weight: 500;
+}
+
+.overflow-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.overflow-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  background: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  color: #bbb;
+  opacity: 0.7;
+  font-size: 0.9rem;
+}
+
+.overflow-icon {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 0.25rem;
+}
+
+.overflow-label-text {
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+.song-label-text.empty-slot {
+  color: #bbb;
+  font-style: italic;
+}
+/* Song list styles */
+.song-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.song-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.song-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.song-label-text {
+  font-weight: 500;
+}
+/* Bard Melody Selector custom styles */
+.goals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.goal-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  background: #f0f0f0;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  color: #888;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  opacity: 0.6;
+}
+
+.goal-btn.active {
+  background: #fff;
+  border: 2px solid #646cff;
+  color: #222;
+  opacity: 1;
+}
+
+.goal-btn:focus {
+  outline: none;
+}
+
+.goal-icon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 0.5rem;
+}
+
+.goal-label-text {
+  font-size: 1rem;
+  font-weight: 500;
+}
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+.stacking-remove-btn {
+  background: #eee;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 0.9em;
+  cursor: pointer;
+  margin: 0 2px;
+}
+.stacking-conflict-red {
+  background: #ffcccc !important;
+  border-color: #d00 !important;
+}
