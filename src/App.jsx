@@ -1073,7 +1073,7 @@ const SONGS = [
     level: 63,
     targetType: "Group",
     skill: "Singing",
-    goals: ["damageShield", "allResists", "ac"],
+    goals: ["damageShield", "magicResist", "fireResist", "coldResist", "poisonResist", "diseaseResist", "ac"],
     effects: [
       "1: Effect type: Increase Damage Shield by 13",
       "2: Effect type: Increase All Resists by 73 (L63) to 75 (L65)",
@@ -1263,6 +1263,7 @@ function App() {
   const [instrumentMastery, setInstrumentMastery] = useState(0);
   const [singingMastery, setSingingMastery] = useState(0);
   const [singingClicky, setSingingClicky] = useState(1); // 1=None, 2=VOTS, 3=Shei cloak
+  const [jamFest, setJamFest] = useState(0); // 0-3: increases assumed player level by this amount
   const [percussionInstrument, setPercussionInstrument] = useState(0); // 0=None, 1=Combine, 2=Selo, 3=DoTB
   const [brassInstrument, setBrassInstrument] = useState(0); // 0=None, 1=Combine, 2=McVax, 3=Immaculate, 4=Denon
   const [stringedInstrument, setStringedInstrument] = useState(0); // 0=None, 1=Combine, 2=Kelin, 3=Lyran
@@ -1308,8 +1309,10 @@ function App() {
   // Helper to parse effect value for a goal at a given level
   function getEffectValue(song, key, level = 60) {
   if (!song || !song.effects) return '';
+  // Normalize song.skill (e.g. "Percussion_instruments") to match SKILLS keys
+  const skillKey = song.skill ? song.skill.replace('_instruments', '') : song.skill;
   // Use the correct skill mod for this song
-  const instrumentMod = getSkillMod(song.skill);
+  const instrumentMod = getSkillMod(skillKey);
     // Haste columns are never modified
     if (key === 'haste') {
       const effectStr = song.effects.find(e => /Increase Attack Speed by \d+%/.test(e));
@@ -1352,7 +1355,11 @@ function App() {
     };
     const effectType = effectTypeMap[key];
     if (!effectType) return '';
-    const effectStr = song.effects.find(e => e.includes(effectType));
+    let effectStr = song.effects.find(e => e.includes(effectType));
+    // If specific resist not found, allow matching an "All Resists" effect
+    if (!effectStr && effectType.includes('Resist')) {
+      effectStr = song.effects.find(e => e.includes('Increase All Resists'));
+    }
     if (!effectStr) return '';
     // Try to extract value for (Lx) to (Ly) pattern
     const match = effectStr.match(/by (\d+) \(L(\d+)\) to (\d+) \(L(\d+)\)/);
@@ -1361,10 +1368,11 @@ function App() {
       const lStart = parseInt(match[2], 10);
       const vEnd = parseInt(match[3], 10);
       const lEnd = parseInt(match[4], 10);
+      // Allow extrapolation beyond lEnd at the same slope (songs that scale to 60 continue scaling past 60)
       let val;
-      if (level <= lStart) val = vStart;
-      else if (level >= lEnd) val = vEnd;
-      else {
+      if (level <= lStart) {
+        val = vStart;
+      } else {
         const slope = (vEnd - vStart) / (lEnd - lStart);
         val = Math.round(vStart + slope * (level - lStart));
       }
@@ -1458,7 +1466,7 @@ function App() {
         let clickyMod = 0;
         if (singingClicky === 2) clickyMod = 0.6;
         if (singingClicky === 3) clickyMod = 0.9;
-        let ampMod = amplificationActive ? 0.9 : 0;
+        let ampMod = amplificationActive ? (jamFest === 3 ? 1.0 : 0.9) : 0;
         mod = 1.0 + 1.8 + singingMastery * 0.2 + clickyMod + ampMod;
       } else {
         let masteryMod = instrumentMastery * 0.2;
@@ -1470,7 +1478,7 @@ function App() {
         let clickyMod = 0;
         if (singingClicky === 2) clickyMod = 0.6;
         if (singingClicky === 3) clickyMod = 0.9;
-        let ampMod = amplificationActive ? 0.9 : 0;
+        let ampMod = amplificationActive ? (jamFest === 3 ? 1.0 : 0.9) : 0;
         let epicMod = haveEpic ? 0.8 : 0;
         mod = 1.0 + epicMod + singingMastery * 0.2 + clickyMod + ampMod;
       } else {
@@ -1493,7 +1501,8 @@ function App() {
         mod = 1.0 + finalInstrumentMod + masteryMod;
       }
     }
-    return Math.min(mod, 3.6);
+    const cap = includePoP ? 4.0 : 3.6;
+    return Math.min(mod, cap);
   }
 
   // Compose reusable chunks for both views
@@ -1656,7 +1665,24 @@ function App() {
           </td>
         </tr>
         <tr>
-          <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Include PoP Songs (Level 61-65)</td>
+          <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Jam Fest</td>
+          <td>
+            {[0, 1, 2, 3].map(val => (
+              <label key={val} style={{ marginRight: '0.5em' }}>
+                <input
+                  type="radio"
+                  name="jamFest"
+                  value={val}
+                  checked={jamFest === val}
+                  onChange={() => setJamFest(val)}
+                />
+                {val}
+              </label>
+            ))}
+          </td>
+        </tr>
+        <tr>
+          <td style={{ paddingRight: '1em', verticalAlign: 'top' }}>Set level to 65 (PoP 4.0 cap)</td>
           <td>
             <input
               type="checkbox"
@@ -1755,7 +1781,7 @@ function App() {
               )}
             </td>
             {INFO_COLUMNS.map(col => (
-              <td key={col.key} style={{ textAlign: 'left' }}>{song ? getEffectValue(song, col.key, 60) : ''}</td>
+              <td key={col.key} style={{ textAlign: 'left' }}>{song ? getEffectValue(song, col.key, (includePoP ? 65 : 60) + jamFest) : ''}</td>
             ))}
           </tr>
         ))}
